@@ -2313,17 +2313,6 @@ mod test {
         }
     }
 
-    // This is the latest build of distribution/distribution from the `main` branch
-    // Until distribution v3 is relased, this is the only way to have this fix
-    // https://github.com/distribution/distribution/pull/3143
-    //
-    // We require this fix only when testing the capability to list tags
-    #[cfg(feature = "test-registry")]
-    fn registry_image_edge() -> GenericImage {
-        images::generic::GenericImage::new("distribution/distribution", "edge")
-            .with_wait_for(WaitFor::message_on_stderr("listening on "))
-    }
-
     #[cfg(feature = "test-registry")]
     fn registry_image() -> GenericImage {
         images::generic::GenericImage::new("docker.io/library/registry", "2")

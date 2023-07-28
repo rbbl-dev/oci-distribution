@@ -1049,7 +1049,7 @@ impl Client {
     /// Pushes the manifest for a specified image
     ///
     /// Returns pullable manifest URL
-    async fn push_manifest(&self, image: &Reference, manifest: &OciManifest) -> Result<String> {
+    pub async fn push_manifest(&self, image: &Reference, manifest: &OciManifest) -> Result<String> {
         let url = self.to_v2_manifest_url(image);
 
         let mut headers = HeaderMap::new();
@@ -2332,7 +2332,7 @@ mod test {
     #[tokio::test]
     #[cfg(feature = "test-registry")]
     async fn can_push_chunk() {
-        let docker = clients::Cli::default();
+        let docker = clients::Cli::podman();
         let test_container = docker.run(registry_image());
         let port = test_container.get_host_port_ipv4(5000);
 
@@ -2377,7 +2377,7 @@ mod test {
     #[tokio::test]
     #[cfg(feature = "test-registry")]
     async fn can_push_multiple_chunks() {
-        let docker = clients::Cli::default();
+        let docker = clients::Cli::podman();
         let test_container = docker.run(registry_image());
         let port = test_container.get_host_port_ipv4(5000);
 
@@ -2415,7 +2415,7 @@ mod test {
     #[tokio::test]
     #[cfg(feature = "test-registry")]
     async fn test_image_roundtrip_anon_auth() {
-        let docker = clients::Cli::default();
+        let docker = clients::Cli::podman();
         let test_container = docker.run(registry_image());
 
         test_image_roundtrip(&RegistryAuth::Anonymous, &test_container).await;
@@ -2428,7 +2428,7 @@ mod test {
         let htpasswd_path = path::Path::join(auth_dir.path(), "htpasswd");
         fs::write(htpasswd_path, HTPASSWD).expect("cannot write htpasswd file");
 
-        let docker = clients::Cli::default();
+        let docker = clients::Cli::podman();
         let image = registry_image_basic_auth(
             auth_dir
                 .path()
